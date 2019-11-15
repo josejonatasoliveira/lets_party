@@ -1,0 +1,133 @@
+{% load i18n avatar_tags %}
+{% load staticfiles %}
+<div class="modal-dialog">
+    <div class="modal-content" style="width:350px">
+        <div class="modal-header" align="center">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+        </div>
+        
+        <!-- Begin # DIV Form -->
+        <div id="div-forms">
+        
+            <!-- Begin # Login Form -->
+            <form id="login-form" action="{% url "account_login" %}?next={{ request.path }}" method="POST">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="modal-body">
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="login" type="text" id="id_username">
+                                <label class="mdl-textfield__label" for="id_username">{% trans "Username" %}</label>
+                            </div>
+                        </div>
+                    </center>
+
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="password" type="password" id="id_password">
+                                <label class="mdl-textfield__label" for="id_password">{% trans "Password" %}</label>
+                            </div>
+                        </div>
+                    </center>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">{% trans "Login" %}</button>
+                    </div>
+                    <div>
+                        <button id="login_lost_btn" type="button" class="btn btn-link mdl-button--accent">Esqueceu a senha?</button>
+                        <button id="login_register_btn" type="button" class="btn btn-link btn btn-link mdl-button--accent">Registre-se</button>
+                    </div>
+                </div>
+            </form>
+            <!-- End # Login Form -->
+            
+            <!-- Begin | Lost Password Form -->
+            <form id="lost-form" style="display:none;">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="login" type="text" id="id_username">
+                                <label class="mdl-textfield__label" for="id_username">Digite seu e-mail</label>
+                            </div>
+                        </div>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">{% trans 'Enviar' %}</button>
+                    </div>
+                    <div>
+                        <button id="lost_login_btn" type="button" class="btn btn-link btn btn-link mdl-button--accent">Logar</button>
+                        <button id="lost_register_btn" type="button" class="btn btn-link btn btn-link mdl-button--accent">Registre-se</button>
+                    </div>
+                </div>
+            </form>
+            <!-- End | Lost Password Form -->
+            
+            <!-- Begin | Register Form -->
+            <form id="register-form" style="display:none;">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div id="div-register-msg">
+                        <div id="icon-register-msg" class="glyphicon glyphicon-chevron-right"></div>
+                        <span id="text-register-msg">Registar uma conta.</span>
+                    </div>
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="username" type="text" id="id_username">
+                                <label class="mdl-textfield__label" for="id_username">{% trans "Username" %}</label>
+                            </div>
+                        </div>
+                    </center>
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="email" type="text" id="id_email">
+                                <label class="mdl-textfield__label" for="id_email">{% trans "Digite seu e-mail" %}</label>
+                            </div>
+                        </div>
+                    </center>
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="password1" type="password" id="id_password1">
+                                <label class="mdl-textfield__label" for="id_password1">{% trans "Digite uma senha" %}</label>
+                            </div>
+                        </div>
+                    </center>
+                    <center>
+                        <div class="group">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" name="passwod2" type="password" id="id_passwod2">
+                                <label class="mdl-textfield__label" for="id_passwod2">{% trans "Confirme as senha" %}</label>
+                            </div>
+                        </div>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Registrar</button>
+                    </div>
+                    <div>
+                        <button id="register_login_btn" type="button" class="btn btn-link btn btn-link mdl-button--accent">Logar</button>
+                        <button id="register_lost_btn" type="button" class="btn btn-link btn btn-link mdl-button--accent">Esqueceu a senha?</button>
+                    </div>
+                </div>
+            </form>
+            <!-- End | Register Form -->
+            
+        </div>
+        <!-- End # DIV Form -->
+        
+    </div>
+</div>

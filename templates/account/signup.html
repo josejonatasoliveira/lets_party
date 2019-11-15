@@ -1,0 +1,30 @@
+{% load staticfiles %}
+{% load i18n avatar_tags %}
+<div class="modal-body">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input type="text" name="username" required id="id_username" aria-label="Usuário" class="mdl-textfield__input"></input>
+      <label class="mdl-textfield__label" for="id_username">{% trans "Username" %}</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input type="text" name="email" required id="id_email" aria-label="Usuário" class="mdl-textfield__input"></input>
+      <label class="mdl-textfield__label" for="id_email">{% trans "E-mail" %}</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input type="password" name="password1" required id="id_password1" aria-label="Usuário" class="mdl-textfield__input"></input>
+      <label class="mdl-textfield__label" for="id_password1">{% trans "Password" %}</label>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input type="password" name="password2" required id="id_password2" aria-label="Usuário" class="mdl-textfield__input"></input>
+      <label class="mdl-textfield__label" for="id_password2">Confirmar a senha</label>
+    </div>
+</div>
+<div class="mdl-card__actions mdl-card--border">
+  <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-dismiss="modal">Fechar</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">Cadastrar</button>
+</div>

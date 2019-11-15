@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load i18n avatar_tags %}
+{% load bootstrap_tags %}
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		
+		<link href="{% static 'projeto_tg/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/bootstrap.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/bootstrap-grid.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/bootstrap-grid.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/bootstrap-reboot.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/bootstrap-reboot.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/css_slider.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/font-awesome.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/single.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/style.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/site.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/quill.snow.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/semantic.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/material.indigo-pink.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/getmdl-select.min.css' %}" rel="stylesheet" />
+		<link href="{% static 'projeto_tg/css/material-components-web.min.css' %}" rel="stylesheet" />
+	
+
+		<script src="{% static 'projeto_tg/js/jquery-3.4.1.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/jquery.mask.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/jquery.mask.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/bootstrap.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/bootstrap.bundle.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/bootstrap.bundle.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/angular.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/angular-sanitize.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/quill.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/material-components-web.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/material.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/getmdl-select.min.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/jquery.mask.js' %}"></script>
+		<script src="{% static 'projeto_tg/js/ckeditor.js' %}"></script>
+
+		<!-- Controllers -->
+		<script src="{% static 'projeto_tg/js/angular-controllers/evento-controller.js' %}"></script>
+		
+		<title>{% block title %}Let's Party{% endblock %}</title>
+	</head>
+	<body ng-app="myApp">
+			<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+					<a class="navbar-brand" href="{% url 'home' %}">Let`s Party</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado" aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+				
+					<div class="row collapse navbar-collapse cold-md-12" id="conteudoNavbarSuportado">
+							
+						  <form class="form-inline col-md-8" action="{% url 'search_event' %}" method="GET">
+								<input class="form-control col-md-5" autocomplete="off" type="text" id="id_q" name="q" placeholder="Pesquisar" onkeyup="autosearch(this)" url="autocomplete" aria-label="Pesquisar">
+								<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin-left: 10px;" type="submit">Pesquisar</button>
+							</form>
+
+							{% with total_items=cart|length %}
+								<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored " href="{% url 'cart:cart_detail' %}" role="button" style="margin-right:10px">
+									<i class="fa fa-shopping-basket" aria-hidden="true"></i>
+									<span class="badge badge-light">{{ total_items }}</span>
+								</a>
+							{% endwith %}
+							{% if user.is_authenticated %}
+								<div class="btn-group">
+									<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{% with full_name=user.first_name|add:' '|add:user.last_name %}
+										{% if full_name.strip %}
+											{{ full_name | truncatechars:20 }}
+										{% else %}
+											{{ user.username | truncatechars:20 }}
+										{% endif %}
+									{% endwith %}
+									</button>
+									<div class="dropdown-menu">
+										<a class="dropdown-item" href="#"data-toggle="modal" role="button" data-target="#logout-modal">Sair</a>
+									</div>
+								</div>
+								<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="{% url 'event_browse' %}" role="button" style="margin-left:10px"><i class="fa fa-plus fa-1x"></i>{% trans " Evento" %}</a>
+							{% else %}
+								<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" data-toggle="modal" role="button" data-target="#modal-options">{% trans "Login" %}</button>
+								{% if not user.is_authenticated %}
+									<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="#" data-toggle="modal" role="button" data-target="#modal-options" style="margin-left:10px"><i class="fa fa-plus fa-1x"></i>{% trans " Evento" %}</a>
+								{% else %}
+									<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="{% url 'event_browse' %}" role="button" style="margin-left:10px"><i class="fa fa-plus fa-1x"></i>{% trans " Evento" %}</a>
+								{% endif %}
+							{% endif %}
+
+					</div>
+			</nav>
+
+			<div class="wrap">
+
+				{% block middle %}
+        {% endblock middle %}
+
+			</div>
+
+			{% block footer %}
+				<section id="footer" style="margin-top:50px">
+
+						<footer class="page-footer font-small blue">
+								<div class="footer-copyright text-center py-3">© 2019 Copyright:
+										<a href="https://mdbootstrap.com/education/bootstrap/"> Fatec</a>
+								</div>
+						</footer>
+
+				</section>
+			{% endblock footer %}
+
+			<!--Modal Options -->
+			{% if not user.is_authenticated %}
+			<div class="modal fade " id="modal-options" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				{% include "account/modal_options.html" %}
+			</div>
+			{% endif %}
+			<!-- Fim modal Options -->
+
+      <!-- Modal Logout -->
+			<div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog demo-card-wide mdl-card mdl-shadow--2dp" role="document">
+					<div class="modal-content">
+			
+						<div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+							<h2 class="mdl-card__title-text">Sair</h2>
+						</div>
+			
+						<form class="form-signin" role="form" action="{% url "account_logout" %}" method="post">
+							<div class="modal-body">
+									{% csrf_token %}
+										<h2 class="page-title">{% trans "Log out" %}</h2>
+										{% csrf_token %}
+										<p>{% trans "Deseja realmente sair?" %}</p>
+							</div>
+							<div class="modal-footer">
+								<div class="form-actions">
+									<button type="submit" class="btn btn-primary">{% trans "Log out" %}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Fim modal Logout -->
+
+			{% block extra_script %}
+				<script type="text/javascript">
+					{% include 'autocomplete.js' %}
+					window.flip = function(flip) {
+						$('#cube').removeClass(); 
+						$('#cube').addClass(flip);   
+					}
+					{% include 'login.js' %}
+				</script>
+			{% endblock extra_script %}
+</body>
+</html>

@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load i18n avatar_tags %}
+{% load staticfiles %}
+
+{% block title %}Evento | Adicionar{% endblock %}
+{% block middle %}
+<section class="container">
+  <div class="row col-md-12 " style="margin-top:60px" ng-controller="myCtrl as vm">
+      <div class="col-md-12"> 
+        <!-- design process steps--> 
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs process-model more-icon-preocess" role="tablist">
+          <li role="presentation" class="active"><a href="#discover" aria-controls="discover" role="tab" data-toggle="tab"><i class="fa fa-question" aria-hidden="true"></i>
+            <p>O que?</p>
+            </a></li>
+          <li role="presentation"><a href="#strategy" aria-controls="strategy" role="tab" data-toggle="tab"><i class="fa fa-map-marker" aria-hidden="true"></i>
+            <p>Onde?</p>
+            </a></li>
+        </ul>
+        <!-- end design process steps--> 
+      </div>
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+          <div role="tabpanel" class="tab-pane col-md-12 active" id="discover">
+            <div class="row">
+              <div class="card" style="width:700px" >
+                <div class="mdl-card__title" style="background-color:rgb(63,81,181)">
+                  <h2 class="mdl-card__title-text" style="color:white">Informações</h2>
+                </div>
+                <div class="card-body">
+
+                  <form method="post" id="save_event" action="{% url 'event_browse' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mdl-textfield mdl-js-textfield mdc-text-field--outlined mdl-textfield--floating-label">
+                      <input class="mdl-textfield__input" type="text" required id="id_name" name="name">
+                      <label class="mdl-textfield__label" for="id_name">Nome</label>
+                    </div>
+                    
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="text" name="title" required id="id_title" aria-label="Título" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_title">Título</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+                        <input type="text" value="" class="mdl-textfield__input" id="category" readonly>
+                        <input type="hidden" required value="" name="category">
+                        <label for="category" class="mdl-textfield__label">Categoria</label>
+                        <ul for="category" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        {% for category in categories %}
+                            <li class="mdl-menu__item" data-val="{{ category.id }}">{{ category.identifier }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield getmdl-select">
+                        <input type="text" value="" class="mdl-textfield__input" id="type_event" readonly>
+                        <input type="hidden" required value="" name="type_event">
+                        <label for="type_event" class="mdl-textfield__label">Tipo</label>
+                        <ul for="type_event" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        {% for type_event in types %}
+                            <li class="mdl-menu__item" data-val="{{ type_event.id }}">{{ type_event.identifier }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
+                        <input type="text" value="" class="mdl-textfield__input" onchange="getCity(this)" id="state" readonly>
+                        <input type="hidden" required value="" name="state">
+                        <label for="state" class="mdl-textfield__label">Estado</label>
+                        <ul for="state" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        {% for state in list_state %}
+                            <li class="mdl-menu__item" data-val="{{ state.sigla }}">{{ state.sigla }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input type="text" value="" name="city" class="mdl-textfield__input" id="city" onkeyup="autosearch(this)" url="autocomplete_city">
+                        <label for="city" class="mdl-textfield__label">Cidade</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="text" name="short_description" required id="id_short_description" aria-label="Pequena descrição" onkeyup="autosearch(this)" url="autocomplete_city" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_short_description">Resumo Evento</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="display:none">
+                      <input type="text" name="description" id="id_description" aria-label="Pequena descrição" onkeyup="autosearch(this)" url="autocomplete_city" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_description">Resumo Evento</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="date" name="start_date" required id="id_start_date" aria-label="Descrição" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_start_date">Data de inicio</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="date" name="end_date" required id="id_end_date" aria-label="Descrição" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_end_date">Data do termino</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="text" name="street_name" required id="id_street_name" aria-label="Endereco" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_street_name">Endereco</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="text" name="cep" pattern="-?[0-9]*(\.[0-9]+)?" id="id_cep" aria-label="CEP" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_cep">CEP</label>
+                      <span class="mdl-textfield__error">Atenção utilize apenas numeros!</span>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="number" name="number" required id="id_number" aria-label="Numero" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_number">Número</label>
+                    </div>
+
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="date" name="date" required id="id_date" aria-label="Data" class="mdl-textfield__input"></input>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="number" name="price" required id="id_price" aria-label="Numero" class="mdl-textfield__input"></input>
+                      <label class="mdl-textfield__label" for="id_price">Preço Cupom</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input type="file" name="image_file" required id="id_image_file" aria-label="Imagem" class="mdl-textfield__input" accept="image/jpeg, image/png, image/jpg"></input>
+                    </div>
+
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">Salvar</button>
+                  </form>
+                </div>
+              </div>
+
+              <div class="card" style="350px">
+                <div class="mdl-card__title" style="background-color:rgb(255,64,129)">
+                  <h2 class="mdl-card__title-text" style="color:white">Preview</h2>
+                </div>
+                <div class="card-body">
+                  <div class="swiper-slide featured-event-box">
+                      <a href="https://www.sympla.com.br/farmer-friends-tour---4-edicao__310823" target="_blank">
+                          <div class="event-image-box" id="image_preview" style="background-image: url({% static 'projeto_tg/images/p7.jpg' %});"></div>
+                          <div class="event-name">
+                              <p>Farmer Friends Tour - 4ª Edição</p>
+                          </div>
+                          <div class="calendar-box">
+                              <div class="calendar-month">Jun </div>
+                              <div class="calendar-day">28 </div>
+                          </div>
+                          <div class="event-local-box">
+                              <div class="uppercase line">
+                                  <p>Urban Farmcy</p>
+                              </div>
+                              <div class="line"><i class="fa fa-clock-o color-grey" style="padding-right: 2px;"></i>13h <i class="fa fa-map-marker color-grey" style="padding: 40px;"></i>Porto Alegre, RS </div>
+                          </div>
+                      </a>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane col-md-12" id="strategy">
+            <div class="row">
+              <div class="card" style="width:1050px">
+                <div class="mdl-card__title" style="background-color:rgb(63,81,181)">
+                  <h2 class="mdl-card__title-text" style="color:white">Corpo descritivo</h2>
+                </div>
+                <div class="card-body">
+                  <textarea name="editor_1"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="optimization">
+            <div class="design-process-content">
+              <form>
+
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Endereco</span>
+                  </div>
+                  <input type="text" name="street_name" required id="id_street_name" aria-label="Endereco" class="form-control"></input>
+                </div>
+
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">CEP</span>
+                  </div>
+                  <input type="number" name="cep" data-mask="99999-999" required id="id_cep" aria-label="CEP" class="form-control"></input>
+                </div>
+                
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Número</span>
+                  </div>
+                  <input type="number" name="number" required id="id_number" aria-label="Numero" class="form-control"></input>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="content">
+            <div class="design-process-content">
+              <h3 class="semi-bold">Content</h3>
+              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincid unt ut laoreet dolore magna aliquam erat volutpat</p>              
+              </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="reporting">
+            <div class="design-process-content">
+              <h3>Reporting</h3>
+              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincid unt ut laoreet dolore magna aliquam erat volutpat. </p>
+          </div>
+          
+        </div>
+      </div>
+
+      {% block extra_script %}
+      <script>
+          $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+              var href = $(e.target).attr('href');
+              var $curr = $(".process-model  a[href='" + href + "']").parent();
+
+              $('.process-model li').removeClass();
+
+              $curr.addClass("active");
+              $curr.prevAll().addClass("visited");
+          });
+
+          $('.mdc-text-field').on('click',(e) => {
+            mdc.textField.MDCTextField.attachTo(e.currentTarget)
+          })
+
+          {% include 'autocomplete.js' %}
+      </script>
+      {% endblock extra_script %}
+  </div>
+</section>
+
+{% endblock middle %}

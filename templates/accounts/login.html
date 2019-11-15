@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n avatar_tags %}
+
+{% block middle %}
+
+<form class="form-signin" role="form" action="{% url "account_login" %}?next={{ request.path }}" method="post">
+  {% include "account/login.html" %}
+</form>
+
+{% endblock middle }

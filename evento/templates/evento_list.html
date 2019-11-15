@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load i18n avatar_tags %}
+{% load staticfiles %}
+
+{% block title %}Evento | Resultados{% endblock %}
+{% block middle %}
+<div style="margin-top:150px" class="container">
+    <h3>{{ count }} Resultado{{ count|pluralize:"s" }}</h3>
+    <div class="row col-md-12">
+    {% for evt in event_search %}
+        <div class="swiper-slide featured-event-box col-md-4">
+                <a href="{% url 'event_detail' event=evt.id_hash %}" >
+                        <div class="event-image-box" style="background-image: url('/uploaded/{{ evt.image_file }}');"></div>
+                        <div class="event-name">
+                        <p>{{ evt.title }}</p>
+                        </div>
+                        <div class="calendar-box">
+                        <div class="calendar-month">{{ evt.month }}</div>
+                        <div class="calendar-day">{{ evt.date.day }}</div>
+                        </div>
+                        <div class="event-local-box">
+                        <div class="uppercase line">
+                                <p>{{ evt.address.city.name }} - {{ evt.address.city.sigla }}</p>
+                        </div>
+                        <div class="line"><i class="fa fa-clock-o color-grey" style="padding-right: 2px;"></i>13h <i class="fa fa-map-marker color-grey" style="padding: 10px;"></i>{{ evt.address.city.name }} , {{ evt.address.city.sigla }}</div>
+                        </div>
+                </a>
+        </div>
+    {% empty %}
+            <p>Nenhum resultado encontrado!</p>
+    {% endfor %}
+    </div>
+</div>
+{% endblock middle %}

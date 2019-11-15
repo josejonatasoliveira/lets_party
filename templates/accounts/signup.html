@@ -1,0 +1,23 @@
+{% load staticfiles %}
+{% load i18n avatar_tags %}
+<div class="modal-body">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+      <label for="id_username" class="sr-only">{% trans "Username" %}:</label>
+      <input id="id_username" class="form-control" name="username" placeholder="{% trans "Username" %}" type="text" />
+      <p>{{ form.username.errors }}</p>
+    </div>
+    <div class="form-group">
+      <label for="id_email" class="sr-only">{% trans "E-mail" %}:</label>
+      <input id="id_email" class="form-control" name="email" type="email" placeholder="{% trans "Username" %}" type="text" />
+    </div>
+    <div class="form-group">
+      <label for="id_password1" class="sr-only">{% trans "Password" %}:</label>
+      <input id="id_password1" class="form-control" name="password1" placeholder="{% trans "Password" %}" type="password" />
+    </div>
+    <div class="form-group">
+      <label for="id_password2" class="sr-only">{% trans "Confirme a senha" %}:</label>
+      <input id="id_password2" class="form-control" name="password2" placeholder="{% trans "Password" %}" type="password" />
+    </div>
+</div>
