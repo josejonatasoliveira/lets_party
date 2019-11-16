@@ -29,6 +29,7 @@ urlpatterns = [
     url(r"^accounts/", include("allauth.urls")),
     url(r"^api/v1/", include("projeto_tg.api.urls")),
     url(r"^api/v1/auth/", include("djoser.urls.authtoken")),
+    url(r'^social-auth/', include('social_django.urls', namespace="social")),
     # path('accounts/', include('django.contrib.auth.urls')),
     url(r'^$',index_view.index_view,name='home'),
     url(r'^cart/', include(('projeto_tg.cart.urls', 'cart'), namespace='cart')),

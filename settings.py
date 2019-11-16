@@ -30,7 +30,7 @@ SECRET_KEY = 'e3yw2=x9*@zdr3!%tqlm0*^c)svk@_=zhuw8tzv-c!8!51zhru'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 PROJECT_APPS = [
     'projeto_tg.base',
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'oauth2_provider',
     'avatar',
     'django_forms_bootstrap',
@@ -225,13 +226,21 @@ SECURE_SSL_REDIRECT = False
 SECURE_HSTS_SECONDS = 3600
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
-
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
     'guardian.backends.ObjectPermissionBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+
+SOCIAL_AUTH_FACEBOOK_KEY = 'YOUR_APP_KRY'        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'YOUR_APP_SECRET'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '678042653404-dr79qtgkrib3mptl9g6oa56cpu3p5rfe.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'MI-fEKVEBZv6khHz-Xks-EV-'
 
 OAUTH2_PROVIDER = {
     'SCOPES': {

@@ -9,6 +9,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'projeto_tg/images/favicon.png' %}">
 		<link href="{% static 'projeto_tg/css/bootstrap.css' %}" rel="stylesheet" />
 		<link href="{% static 'projeto_tg/css/bootstrap.min.css' %}" rel="stylesheet" />
 		<link href="{% static 'projeto_tg/css/bootstrap-grid.css' %}" rel="stylesheet" />
@@ -50,7 +51,7 @@
 	</head>
 	<body ng-app="myApp">
 			<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-					<a class="navbar-brand" href="{% url 'home' %}">Let`s Party</a>
+					<a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'projeto_tg/images/logo.png' %}" width="80" /></a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado" aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
 						<span class="navbar-toggler-icon"></span>
 					</button>

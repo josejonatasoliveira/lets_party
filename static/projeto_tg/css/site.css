@@ -1198,3 +1198,28 @@ section#all-results-list {
 }
 /*Fim seção autocomplete*/
 
+.social-login-btn {
+  margin: 5px;
+  width: 20%;
+  font-size: 125%;
+  padding: 0;
+}
+.social-facebook {
+  background-color: #4c699e;
+  border-color: #47618d;
+}
+
+.social-facebook:hover {
+  background-color: #4c699e;
+  border-color: #47618d;
+}
+
+.social-google {
+  background-color: #da573b;
+  border-color: #be5238;
+}
+.social-google:hover {
+  background-color: #be5238;
+  border-color: #9b4631;
+}
+

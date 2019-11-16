@@ -3,14 +3,14 @@
 <div class="modal-dialog">
     <div class="modal-content" style="width:350px">
         <div class="modal-header" align="center">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
+            <center>
+                <img src="{% static 'projeto_tg/images/logo.png' %}" width="150" style="margin-left:50%"/>
+            </center>
         </div>
         
         <!-- Begin # DIV Form -->
         <div id="div-forms">
-        
+
             <!-- Begin # Login Form -->
             <form id="login-form" action="{% url "account_login" %}?next={{ request.path }}" method="POST">
                 {% csrf_token %}
@@ -34,6 +34,14 @@
                         </div>
                     </center>
 
+                    <center>
+                        <p>OU</p>
+                        <a class="btn btn-primary social-login-btn social-facebook" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">
+                            <i class="fa fa-facebook"></i></a>
+                        <a class="btn btn-primary social-login-btn social-google" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
+                            <i class="fa fa-google-plus"></i></a>
+                    </center>
+
                 </div>
 
                 <div class="modal-footer">
@@ -49,7 +57,7 @@
             <!-- End # Login Form -->
             
             <!-- Begin | Lost Password Form -->
-            <form id="lost-form" style="display:none;">
+            <form id="lost-form" style="display:none;" method="POST" action="{% url 'account_reset_password' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <center>
