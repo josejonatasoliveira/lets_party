@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^cart/', include(('projeto_tg.cart.urls', 'cart'), namespace='cart')),
     url(r'event_carousel/',index_view.get_events),
     url(r'^event/', include('projeto_tg.evento.urls')),
+    url(r'^profile/', include('projeto_tg.people.urls')),
     url(r'^search/', include('haystack.urls')),
     url(r'^search/autocomplete_city', index_view.autocomplete_city),
     url(r'^search/autocomplete', index_view.autocomplete)

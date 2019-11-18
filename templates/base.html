@@ -81,6 +81,7 @@
 									{% endwith %}
 									</button>
 									<div class="dropdown-menu">
+										<a class="dropdown-item" href="{% url 'profile_detail' username=user.username %}">Meu Perfil</a>
 										<a class="dropdown-item" href="#"data-toggle="modal" role="button" data-target="#logout-modal">Sair</a>
 									</div>
 								</div>
