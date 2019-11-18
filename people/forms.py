@@ -9,11 +9,13 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         exclude = (
             'user',
-            'first_name',
-            'last_name',
+            'profile',
             'password',
             'last_login',
+            'groups',
+            'user_permissions',
             'username',
             'is_staff',
             'is_superuser',
-            'is_active')
+            'is_active',
+            'date_joined')

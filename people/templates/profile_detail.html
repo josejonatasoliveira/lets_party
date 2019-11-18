@@ -4,8 +4,11 @@
 
 {% block middle %}
 <div class="container" style="margin-top:100px">
-<h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
-<a href="{% url 'profile_edit' %}" class="btn btn-primary" alt="Editar meu perfil" style="float:right"><i class="fa fa-edit fa-1x"></i></a>
+<h3>{{ profile.first_name }} {{ profile.last_name }}
+  <a href="{% url 'profile_edit' %}" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" alt="Editar meu perfil" style="float:right">
+    <i class="fa fa-edit fa-1x"></i> Editar
+  </a>
+</h3>
   <table class="table table-user-profile">
     <tbody>
       <tr>
