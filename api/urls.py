@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^get_event/', views.GetEventApi.as_view(), name="api_get_event" ),
     url(r'^state/', views.EstadoApi.as_view(), name="api_state" ),
     url(r'^city/', views.CidadeApi.as_view(), name="api_city" ),
+    url(r'^profile/', views.ProfileApi.as_view(), name="api_profile" ),
 ]

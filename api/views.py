@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.db.models import Q
+from django.http import Http404
 
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from rest_framework.decorators import api_view
 
 from projeto_tg.evento.serializers import EventoSerializer
 from projeto_tg.cidade.serializers import CidadeSerializer, EstadoSerializer
+from projeto_tg.people.serializers import ProfileSerializer
 from projeto_tg.endereco.models import Endereco
 from projeto_tg.evento.models import Evento, UploadSession
 from projeto_tg.cidade.models import Cidade, Estado
@@ -31,7 +33,6 @@ class EventoApi(generics.ListAPIView):
         request.data['upload_session'] = upload_session
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
-              breakpoint()
               serializer.save()
               return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -71,4 +72,21 @@ class CidadeApi(generics.ListAPIView):
 
 class ProfileApi(generics.ListAPIView):
       queryset = Profile.objects.all()
+      serializer_class = ProfileSerializer
+
+      def get_objects(self, primary_key):
+            try:
+                  profile = Profile.objects.get(id__exact=primary_key)
+            except Exception as e:
+                  raise Http404
+
+      def put(self, request):
+            breakpoint()
+            primary_key = request.POST.get("id")
+            profile = self.get_objects(primary_key)
+            serializer = ProfileSerializer(profile, data=request.data)
+            if serializer.is_valid():
+                  serializer.save()
+                  return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
