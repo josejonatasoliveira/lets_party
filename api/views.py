@@ -14,6 +14,7 @@ from projeto_tg.cidade.serializers import CidadeSerializer, EstadoSerializer
 from projeto_tg.endereco.models import Endereco
 from projeto_tg.evento.models import Evento, UploadSession
 from projeto_tg.cidade.models import Cidade, Estado
+from projeto_tg.people.models import Profile
 from projeto_tg.api.pagination_cfg import EventPagination, StatePagination, CityPagination
 
 import json
@@ -67,4 +68,7 @@ class CidadeApi(generics.ListAPIView):
       queryset = Cidade.objects.all()
       serializer_class = CidadeSerializer
       pagination_class = CityPagination
+
+class ProfileApi(generics.ListAPIView):
+      queryset = Profile.objects.all()
 

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser, UserManager
-
+from datetime import datetime
 from projeto_tg.endereco.models import Endereco
 
 class ProfileUserManager(UserManager):
@@ -36,6 +36,10 @@ class Profile(AbstractUser):
         blank=True,
         null=True,
         help_text=_("Número do telefone pessoal")
+    )
+    birthday = models.DateTimeField(
+        _('Data de Nascimento'),
+        default= datetime.now()
     )
     cpf = models.CharField(
         _("Cpf do usuário"),
