@@ -17,21 +17,24 @@ class ProfileSerializer(serializers.Serializer):
 
   def create(self, validated_data):
     address = validated_data['address']
-    breakpoint()
-    adrr = Endereco.objects.filter(Q(street_name__exact=address['street_name']))
-    if not adrr:
-          adrr = Endereco.objects.create(**address)
+    city = address['city']
+    state = city['estado']
 
-    city = validated_data['city']
-    city = Cidade.objects.filter(Q(name__iexact=city['name'], sigla__iexact=city['sigla']))
-
-    state = validated_data["estado"]
-    state = Estado.objects.filter(Q(name__iexact=state['name'], sigla_iexact=state['sigla']))
+    state = Estado.objects.get(Q(name__iexact=state['name'], sigla__iexact=state['sigla']))
 
     city['estado'] = state
-    adrr['city'] = city
+    city = Cidade.objects.get(Q(name__iexact=city['name'], sigla__iexact=city['sigla']))
+
+    address['city'] = city
+
+    try:
+      adrr = Endereco.objects.get(Q(street_name__exact=address['street_name'], number__exact=address['number']))
+    except:
+      adrr = Endereco.objects.create(**address)
 
     validated_data['address'] = adrr
+
+    Profile.objects.create(**validated_data)
 
     return Profile(**validated_data)
 

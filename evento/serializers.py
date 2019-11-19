@@ -47,19 +47,19 @@ class EventoSerializer(serializers.Serializer):
     city = address['city']
     state = city['estado']
     
-    breakpoint()
-    state = Estado.objects.filter(Q(name__exact=state['name']) | Q(sigla__exact=state['sigla']))
+    state = Estado.objects.get(Q(name__exact=state['name'], sigla__exact=state['sigla']))
 
-    city['estado'] = state[0]
-    city = Cidade.objects.filter(Q(name__exact=city['name']) | Q(sigla__exact=city['sigla']))
+    city['estado'] = state
+    city = Cidade.objects.get(Q(name__exact=city['name'], sigla__exact=city['sigla']))
     
-    address['city'] = city[0]
-    adrr = Endereco.objects.filter(Q(street_name__exact=address['street_name']))
+    address['city'] = city
+
+    try:
+      adrr = Endereco.objects.filter(Q(street_name__exact=address['street_name']))
+    except:
+      adrr = Endereco.objects.create(**address)
     
-    if not adrr:
-          adrr = Endereco.objects.create(**address)
-    
-    validated_data['address'] = adrr[0]
+    validated_data['address'] = adrr
     Evento.objects.create(**validated_data)
     
     return Evento(**validated_data)
