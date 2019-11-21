@@ -34,7 +34,7 @@ class ProfileSerializer(serializers.Serializer):
 
     validated_data['address'] = adrr
 
-    Profile.objects.create(**validated_data)
+    Profile.objects.filter(Q(id__exact=validated_data['id'])).update(**validated_data)
 
     return Profile(**validated_data)
 

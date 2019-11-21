@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'elasticsearch_dsl',
     'haystack',
     'bootstrap4',
+    'corsheaders',
     # 'crispy_forms',
 ] + PROJECT_APPS
 
@@ -90,6 +91,8 @@ ELASTICSEARCH_DSL = {
 
 MIDDLEWARE = [
     #'djdev_panel.middleware.DebugMiddleware', #Remover depois
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -98,6 +101,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:19002',
+    'http://127.0.0.1:8000',
+    'exp://192.168.1.39:19000',
+)
 
 ROOT_URLCONF = 'projeto_tg.urls'
 
