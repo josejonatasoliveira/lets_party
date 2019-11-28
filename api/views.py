@@ -6,17 +6,22 @@ from django.http import Http404
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 
+import datetime
+
 from projeto_tg.evento.serializers import EventoSerializer
 from projeto_tg.cidade.serializers import CidadeSerializer, EstadoSerializer
-from projeto_tg.people.serializers import ProfileSerializer
+from projeto_tg.people.serializers import ProfileSerializer, ProfileSignInSerializer
 from projeto_tg.endereco.models import Endereco
 from projeto_tg.evento.models import Evento, UploadSession
 from projeto_tg.cidade.models import Cidade, Estado
 from projeto_tg.people.models import Profile
+from projeto_tg.order.models import Order, OrderItem
+from projeto_tg.order.serializers import OrderItemSerializer
 from projeto_tg.api.pagination_cfg import EventPagination, StatePagination, CityPagination
 
 import json
@@ -36,6 +41,28 @@ class EventoApi(generics.ListAPIView):
               serializer.save()
               return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SearchApi(generics.ListAPIView):
+      queryset = Evento.objects.all()
+      serializer_class = EventoSerializer
+
+      def get(self, request):
+            q = request.GET.get('q')
+            event_search = Evento.objects.filter(Q(title__icontains=q) | Q(name__icontains=q))
+            results = []
+            for event in event_search:
+                  event.month = datetime.date(event.date.year, event.date.month, event.date.day).strftime("%b")
+                  res = model_to_dict(event)
+                  res['image_file'] = event.image_file.name
+                  results.append(res)
+
+            count = len(event_search)
+            out = {
+                  'results': results,
+                  'count': count
+            }
+
+            return Response(out)
 
 class GetEventApi(generics.ListAPIView):
       queryset = Evento.objects.all()
@@ -70,18 +97,84 @@ class CidadeApi(generics.ListAPIView):
       serializer_class = CidadeSerializer
       pagination_class = CityPagination
 
+class ProfileSignInApi(generics.ListAPIView):
+      queryset = Profile.objects.all()
+      serializer_class = ProfileSignInSerializer
+
+      def post(self, request, *args, **kwargs):
+            serializer = ProfileSignInSerializer(data=request.data)
+
+            if serializer.is_valid():
+                  serializer.save()
+                  return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OrderApi(generics.ListAPIView):
+      queryset = OrderItem.objects.all()
+      serializer_class = OrderItemSerializer
+
+      def get(self, request):
+            token = request.GET.get("token")
+
+            user = Token.objects.get(key=token).user
+
+            orders = OrderItem.objects.filter(Q(order__upload_session__user=user))
+            results = []
+
+            for item in orders:
+                  order = model_to_dict(item)
+                  order['event'] = model_to_dict(item.event)
+                  order['event']['image_file'] = item.event.image_file.name
+                  order['event']['date'] = item.event.date.strftime("%d/%m/%Y")
+                  order['address'] = model_to_dict(item.event.address)
+                  order['address']['city'] = model_to_dict(item.event.address.city)
+                  order['order'] = model_to_dict(item.order)
+                  results.append(order)
+            out = {
+                  'results':results
+            }
+
+            return Response(out)
+
+      def post(self, request, *args, **kwargs):
+
+            token = request.data['token']
+
+            user = Token.objects.get(key=token).user
+            upload_session = UploadSession.objects.create(user=user)
+
+            request.data['price'] = request.data['event']['price']
+            request.data['final_price'] = request.data['event']['price'] * request.data['quantity']
+
+            try:
+                  order = Order.objects.create(final_value=request.data['final_price'],
+                                               upload_session=upload_session)
+                  event = Evento.objects.get(Q(id__exact=request.data['event']['id']))
+                  try:
+                        order_item, has_create = OrderItem.objects.get_or_create(
+                              order=order,
+                              event=event,
+                              quantity= request.data['quantity'],
+                              price=request.data['price'],
+                              final_price=request.data['final_price']
+                        )
+                  except Exception as e:
+                        print(e)
+                  return Response(request.data, status=status.HTTP_201_CREATED)
+            except:
+                  return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+
 class ProfileApi(generics.ListAPIView):
       queryset = Profile.objects.all()
       serializer_class = ProfileSerializer
 
       def get_objects(self, primary_key):
             try:
-                  profile = Profile.objects.get(id__exact=primary_key)
+                  return Profile.objects.get(id__exact=primary_key)
             except Exception as e:
                   raise Http404
 
       def put(self, request):
-            breakpoint()
             primary_key = request.POST.get("id")
             profile = self.get_objects(primary_key)
             serializer = ProfileSerializer(profile, data=request.data)

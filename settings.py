@@ -71,10 +71,12 @@ INSTALLED_APPS = [
     'haystack',
     'bootstrap4',
     'corsheaders',
+    'rest_framework_swagger',
     # 'crispy_forms',
 ] + PROJECT_APPS
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
+APPEND_SLASH=False
 
 HAYSTACK_CONNECTIONS = {
     'default': {

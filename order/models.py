@@ -1,6 +1,7 @@
 from django.db import models
+from django.conf import settings
 from .managers import OrderManager
-from projeto_tg.evento.models import Evento
+from projeto_tg.evento.models import Evento, UploadSession
 from datetime import datetime
 
 class Order(models.Model):
@@ -27,6 +28,7 @@ class Order(models.Model):
     help_text="Se a ordem foi paga ou não",
     default=True
   )
+  upload_session = models.ForeignKey(UploadSession, blank=True, null=True, on_delete=models.SET_NULL, default=None)
 
   class Meta:
     db_table = 'ord_order'

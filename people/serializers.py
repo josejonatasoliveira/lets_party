@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from projeto_tg.people.models import Profile
@@ -6,6 +7,27 @@ from projeto_tg.endereco.models import Endereco
 from projeto_tg.cidade.models import Estado
 from projeto_tg.cidade.models import Cidade
 from projeto_tg.endereco.serializers import EnderecoSerializer
+
+UserModel = get_user_model()
+
+class ProfileSignInSerializer(serializers.Serializer):
+  username = serializers.CharField(write_only=True)
+  email = serializers.CharField(write_only=True)
+  password = serializers.CharField(write_only=True)
+
+  def create(self, validated_data):
+    user = UserModel.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email']
+        )
+    user.set_password(validated_data['password'])
+    user.save()
+    return user
+
+  def update(self, instance, validated_data):
+    instance.username = validated_data.get('username', instance.username)
+    instance.email = validated_data.get('email', instance.email)
+    instance.password = validated_data.get('password', instance.password)
 
 class ProfileSerializer(serializers.Serializer):
   id = serializers.IntegerField()
@@ -33,6 +55,7 @@ class ProfileSerializer(serializers.Serializer):
       adrr = Endereco.objects.create(**address)
 
     validated_data['address'] = adrr
+    breakpoint()
 
     Profile.objects.filter(Q(id__exact=validated_data['id'])).update(**validated_data)
 

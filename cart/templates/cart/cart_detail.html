@@ -83,9 +83,9 @@
                                 <i class="glyphicon glyphicon-play" aria-hidden="true"></i>
                             </a>
                         {% else %}
-                            <a href="#" class="btn btn-danger">Finalizar Compra 
+                            <button id="checkout_order" class="btn btn-danger">Finalizar Compra 
                                 <i class="glyphicon glyphicon-play" aria-hidden="true"></i>
-                            </a>
+                            </button>
                         {% endif %}
                     </td>
                 </tr>
@@ -93,5 +93,19 @@
             </table>
         </div>
     </div>
+    <script>
+    $("#checkout_order").on('click', (e) => {
+        $.ajax({
+            url: "{% url 'checkout_order' %}",
+            method: 'POST',
+            beforeSend: (xhr) => {
+                xhr.setRequestHeader('X-CSRFTOKEN', "{{ csrf_token }}");
+            },
+            complete: (data) => {
+                console.log(data);
+            }
+        })
+    })
+    </script>
 </div>
 {% endblock %}

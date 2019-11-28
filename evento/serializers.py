@@ -27,16 +27,17 @@ class UploadSessionSerializer(serializers.Serializer):
             return UploadSession(**validated_data)
 
 class EventoSerializer(serializers.Serializer):
+  id = serializers.IntegerField(read_only=True)
   id_hash = serializers.CharField(read_only=True)
   name = serializers.CharField()
   title = serializers.CharField()
-  date = serializers.DateTimeField()
+  date = serializers.DateTimeField(format="%d-%m-%Y")
   start_date = serializers.DateTimeField()
   end_date = serializers.DateTimeField()
   description = serializers.CharField()
   short_description = serializers.CharField()
   price = serializers.DecimalField(max_digits=10, decimal_places=2)
-  image_file = serializers.FileField()
+  image_file = serializers.CharField()
   address = EnderecoSerializer()
   category = TopicCategorySerializer(read_only=True)
   type_event = TopicTypeSerializer(read_only=True)
@@ -65,6 +66,7 @@ class EventoSerializer(serializers.Serializer):
     return Evento(**validated_data)
   
   def update(self, instance, validated_data):
+    instance.id = validated_data.get('id', instance.id)
     instance.id_hash = validated_data.get('id_hash', instance.id_hash)
     instance.name = validated_data.get('name', instance.name)
     instance.title = validated_data.get('title', instance.title)
