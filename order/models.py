@@ -33,9 +33,26 @@ class Order(models.Model):
   class Meta:
     db_table = 'ord_order'
 
+
+class Ticket(models.Model):
+
+  key = models.CharField(
+    help_text="Chave atualizado do ticket",
+    max_length=16,
+    default="123456789123456"
+  )
+  value = models.CharField(max_length=255, default="")
+  is_active = models.BooleanField(default=True)
+  created_at = models.DateTimeField(auto_now_add=True)
+  update_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    db_table = "tic_ticket"
+
 class OrderItem(models.Model):
   order = models.ForeignKey(Order, on_delete=models.CASCADE)
   event = models.ForeignKey(Evento, on_delete=models.PROTECT, default=22, null=True)
+  ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT, null=True)
   quantity = models.IntegerField(default=1) 
   price = models.DecimalField(default=0.00, decimal_places=2, max_digits=20)
   final_price = models.DecimalField(default=0.0,decimal_places=2, max_digits=20)
@@ -49,6 +66,8 @@ class OrderItem(models.Model):
   def augment_quantity(self, quantity):
         self.quantity += int(quantity)
         self.save()
+
+
         
 
 

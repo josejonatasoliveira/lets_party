@@ -11,7 +11,12 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 
+import base64
+import binascii
+from Crypto.Cipher import AES
+
 import datetime
+import time
 
 from projeto_tg.evento.serializers import EventoSerializer
 from projeto_tg.cidade.serializers import CidadeSerializer, EstadoSerializer
@@ -20,7 +25,7 @@ from projeto_tg.endereco.models import Endereco
 from projeto_tg.evento.models import Evento, UploadSession
 from projeto_tg.cidade.models import Cidade, Estado
 from projeto_tg.people.models import Profile
-from projeto_tg.order.models import Order, OrderItem
+from projeto_tg.order.models import Order, OrderItem, Ticket
 from projeto_tg.order.serializers import OrderItemSerializer
 from projeto_tg.api.pagination_cfg import EventPagination, StatePagination, CityPagination
 
@@ -182,4 +187,52 @@ class ProfileApi(generics.ListAPIView):
                   serializer.save()
                   return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TicketApi(generics.ListAPIView):
+
+      queryset = OrderItem.objects.all()
+      serializer_class = OrderItemSerializer
+
+      def unpad(self, data):
+            return data[:-ord(data[-1])]
+
+      def get(self, request):
+
+            BLOCK_SIZE = 16
+            
+            encrypted_data = request.GET.get('enc_data')
+            order_id = request.GET.get('id')
+            
+            key = OrderItem.objects.get(Q(order__id=order_id)).ticket.key.encode()
+            encrypted = base64.b64decode(encrypted_data.replace(' ','+'))
+            IV = encrypted[:BLOCK_SIZE]
+            aes = AES.new(key, AES.MODE_CBC, IV)
+            result = aes.decrypt(encrypted[BLOCK_SIZE:])
+            print(key)
+            breakpoint()
+            out = {
+                  'result': result.strip()
+            }
+
+            return Response(out, status=status.HTTP_201_CREATED)
+      
+      def post(self, request):
+
+            try:
+                  token = request.data['token']
+                  key = request.data['key']
+                  order_id = request.data['order_id']
+                  
+                  user = Token.objects.get(key=token).user
+                  order_item = OrderItem.objects.get(Q(order__id=order_id))
+                  Ticket.objects.filter(id__exact=order_item.ticket.id)\
+                        .update(key=key)
+                  out = { 'message': 'OK' }
+                  return Response(out, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                  out = { 'message': str(e) }
+                  return Response(out, status=status.HTTP_400_BAD_REQUEST)
+            
+
 
