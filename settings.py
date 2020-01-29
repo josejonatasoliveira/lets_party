@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'haystack',
     'bootstrap4',
     'corsheaders',
+    'django_extensions',
     'rest_framework_swagger',
     # 'crispy_forms',
 ] + PROJECT_APPS

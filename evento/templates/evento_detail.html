@@ -67,7 +67,7 @@
       vertical-align: middle;
       text-align: center;
     }
-    input{
+    div > input{
       height:34px;
       width: 100px;
       text-align: center;
@@ -86,7 +86,7 @@
         <img src="/uploaded/{{ event.image_file }}" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{ event.name }}</h5>
-          <p class="card-text"><strong>Preço:</strong> R$ {{ event.price }}</p>
+          <p class="card-text" style="font-size:14px;color:black"><strong>Preço:</strong> R$ {{ event.price }}</p>
           
           <form action="{% url "cart:cart_add" event.id_hash %}" method="post">
               {% csrf_token %}

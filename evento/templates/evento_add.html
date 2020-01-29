@@ -142,9 +142,9 @@
                 </div>
                 <div class="card-body">
                   <div class="swiper-slide featured-event-box">
-                      <a href="https://www.sympla.com.br/farmer-friends-tour---4-edicao__310823" target="_blank">
+                      <a href="https://www.sympla.com.br/farmer-friends-tour---4-edicao__310823">
                           <div class="event-image-box" id="image_preview" style="background-image: url({% static 'projeto_tg/images/p7.jpg' %});"></div>
-                          <div class="event-name">
+                          <div class="event-name" id="model-event-name">
                               <p>Farmer Friends Tour - 4ª Edição</p>
                           </div>
                           <div class="calendar-box">
@@ -239,7 +239,6 @@
           $('.mdc-text-field').on('click',(e) => {
             mdc.textField.MDCTextField.attachTo(e.currentTarget)
           })
-
           {% include 'autocomplete.js' %}
       </script>
       {% endblock extra_script %}

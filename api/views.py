@@ -125,7 +125,6 @@ class OrderApi(generics.ListAPIView):
 
             orders = OrderItem.objects.filter(Q(order__upload_session__user=user))
             results = []
-
             for item in orders:
                   order = model_to_dict(item)
                   order['event'] = model_to_dict(item.event)
@@ -134,6 +133,7 @@ class OrderApi(generics.ListAPIView):
                   order['address'] = model_to_dict(item.event.address)
                   order['address']['city'] = model_to_dict(item.event.address.city)
                   order['order'] = model_to_dict(item.order)
+                  order['ticket'] = model_to_dict(item.ticket)
                   results.append(order)
             out = {
                   'results':results
@@ -203,16 +203,20 @@ class TicketApi(generics.ListAPIView):
             
             encrypted_data = request.GET.get('enc_data')
             order_id = request.GET.get('id')
+            authenticated = False
             
             key = OrderItem.objects.get(Q(order__id=order_id)).ticket.key.encode()
+            value = OrderItem.objects.get(Q(order__id=order_id)).ticket.value
             encrypted = base64.b64decode(encrypted_data.replace(' ','+'))
             IV = encrypted[:BLOCK_SIZE]
             aes = AES.new(key, AES.MODE_CBC, IV)
             result = aes.decrypt(encrypted[BLOCK_SIZE:])
-            print(key)
-            breakpoint()
+
+            if( value == result):
+                  authenticated = True
+
             out = {
-                  'result': result.strip()
+                  'is_authenticated': authenticated
             }
 
             return Response(out, status=status.HTTP_201_CREATED)

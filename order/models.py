@@ -3,6 +3,7 @@ from django.conf import settings
 from .managers import OrderManager
 from projeto_tg.evento.models import Evento, UploadSession
 from datetime import datetime
+import uuid
 
 class Order(models.Model):
   timestamp = models.DateTimeField(default=datetime.now())
@@ -39,14 +40,15 @@ class Ticket(models.Model):
   key = models.CharField(
     help_text="Chave atualizado do ticket",
     max_length=16,
-    default="123456789123456"
+    default=uuid.uuid1().hex[:16],
+    unique=True
   )
   value = models.CharField(max_length=255, default="")
   is_active = models.BooleanField(default=True)
   created_at = models.DateTimeField(auto_now_add=True)
   update_at = models.DateTimeField(auto_now=True)
 
-  class Meta:
+  class Meta: 
     db_table = "tic_ticket"
 
 class OrderItem(models.Model):
@@ -66,9 +68,4 @@ class OrderItem(models.Model):
   def augment_quantity(self, quantity):
         self.quantity += int(quantity)
         self.save()
-
-
-        
-
-
 
